@@ -5,11 +5,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>合租客</title>
-		<script src="js/mui.min.js"></script>
 		<link href="css/mui.min.css" rel="stylesheet" />
-		<script type="text/javascript" charset="utf-8">
-			mui.init();
-		</script>
+
 	</head>
 
 	<body>
@@ -107,14 +104,39 @@
 			</div>
 
 		</div>
+		<div class="mui-popup mui-popup-in" style="display: block;">
+			<div class="mui-popup-inner">
+				<div class="mui-popup-title">今天谁记账</div>
+				<br />
+				<button class="mui-btn-primary">杨成</button>
+				<button class="mui-btn-negative">冉椿林</button>
+				<button class="mui-btn-negative">郭富全</button>
+			</div>
+			<div class="mui-popup-button">
+				确认
+			</div>
+		</div>
+
 		<!--底部选项卡-->
 		<nav class="mui-bar mui-bar-tab" style="border-radius: 50px;width: 60px;height: 60px;float: left;margin: auto;bottom: 10px;border: groove;background-color: transparent">
 			<a id="write" class="mui-tab-item mui-active" href="second/taskHome.html">
 				<span class="mui-icon mui-icon-compose" style="color: #FF5053;"></span>
 			</a>
 		</nav>
-		<!--即使是底部工具条和底部选项卡，也要放在.mui-content之前，否则固定栏会遮住部分主内容-->
 
+		<!--即使是底部工具条和底部选项卡，也要放在.mui-content之前，否则固定栏会遮住部分主内容-->
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			var mask = mui.createMask(function() { //callback为用户点击蒙版时自动执行的回调；
+				//				this.show(); //显示遮罩
+			});
+			mask.show(); //显示遮罩
+			//			mask.close(); //关闭遮罩
+			mui.plusReady(function() {
+				mui.alert("你好");
+			});
+		</script>
 	</body>
 
 </html>

@@ -104,22 +104,22 @@
 			</div>
 
 		</div>
-		<div class="mui-popup mui-popup-in" style="display: block;">
+		<div id="nameAlert" class="mui-popup mui-popup-in" style="display: none;">
 			<div class="mui-popup-inner">
 				<div class="mui-popup-title">今天谁记账</div>
 				<br />
-				<button class="mui-btn-primary">杨成</button>
-				<button class="mui-btn-negative">冉椿林</button>
-				<button class="mui-btn-negative">郭富全</button>
+				<button onclick="who(this,'y')" class="mui-btn-primary namebtn">杨成</button>
+				<button onclick="who(this,'r')" class="mui-btn-negative namebtn">冉椿林</button>
+				<button onclick="who(this,'g')" class="mui-btn-negative namebtn">郭富全</button>
 			</div>
-			<div class="mui-popup-button">
+			<div id="okbtn" class="mui-popup-button">
 				确认
 			</div>
 		</div>
 
 		<!--底部选项卡-->
-		<nav class="mui-bar mui-bar-tab" style="border-radius: 50px;width: 60px;height: 60px;float: left;margin: auto;bottom: 10px;border: groove;background-color: transparent">
-			<a id="write" class="mui-tab-item mui-active" href="second/taskHome.html">
+		<nav id="write" class="mui-bar mui-bar-tab" style="border-radius: 50px;width: 60px;height: 60px;float: left;margin: auto;bottom: 10px;border: groove;background-color: transparent">
+			<a class="mui-tab-item mui-active" href="second/taskHome.html">
 				<span class="mui-icon mui-icon-compose" style="color: #FF5053;"></span>
 			</a>
 		</nav>
@@ -128,13 +128,35 @@
 		<script src="js/mui.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
-			var mask = mui.createMask(function() { //callback为用户点击蒙版时自动执行的回调；
-				//				this.show(); //显示遮罩
-			});
-			mask.show(); //显示遮罩
-			//			mask.close(); //关闭遮罩
 			mui.plusReady(function() {
-				mui.alert("你好");
+				//只在手机运行的代码
+			});
+			//定义一个全局变量存谁记账
+			var person = "杨成";
+			var mask = mui.createMask(function() { //callback为用户点击蒙版时自动执行的回调；
+				mui("#nameAlert")[0].setAttribute("style", "display: none;");
+			});
+
+			//选中谁记账函数
+			function who(obj, name) {
+				for(var i = 0; i < mui(".namebtn").length; i++) {
+					mui(".namebtn")[i].setAttribute('class', 'mui-btn-negative namebtn');
+				}
+				obj.setAttribute('class', 'mui-btn-primary namebtn');
+				console.log(name + "," + obj.innerText);
+				person = obj.innerText;
+			}
+
+			//点击写账单按钮
+			mui("#write")[0].addEventListener("tap", function() {
+				mask.show(); //显示遮罩
+				mui("#nameAlert")[0].setAttribute("style", "display: block;");
+			});
+			//点击确认按钮
+			mui("#okbtn")[0].addEventListener("tap", function() {
+				mask.close(); //显示遮罩
+				mui("#nameAlert")[0].setAttribute("style", "display: none;");
+				console.log("谁记账：" + person);
 			});
 		</script>
 	</body>

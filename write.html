@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="//at.alicdn.com/t/font_lqkpfcmw7bymn29.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="mui-content-padded">
+			<div id="myRows">
+				<div class="myRow">
+					<input type="text" class="mui-input-clear" placeholder="菜名" style="float: left;width: 48%;height: 34px;">
+					<input type="number" class="mui-input-clear" placeholder="￥价格" style="float: right;width: 48%;height: 34px;padding: 5px 15px;">
+				</div>
+			</div>
+
+			<button id="add" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 5px;">+</button>
+		</div>
+		<!--底部选项卡-->
+		<nav id="submit" class="mui-bar mui-bar-tab" style="border-radius: 50px;width: 60px;height: 60px;float: left;margin: auto;bottom: 10px;border: groove;background-color: transparent">
+			<a class="mui-tab-item mui-active" href="javascript:void(0);">
+				<span class="mui-icon mui-icon-paperplane" style="color: #FF5053;"></span>
+			</a>
+		</nav>
+		<script src="js/mui.min.js"></script>
+		<script src="https://cdn.wilddog.com/sdk/js/2.5.2/wilddog.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var person = null;
+			mui.plusReady(function() {
+				//只在手机运行的代码
+				person = plus.webview.currentWebview().name;
+			});
+			/**
+			 * 野狗连接//////////////////////
+			 */
+			// 初始化
+			var config = {
+				authDomain: "hzk.wilddog.com",
+				syncURL: "https://hzk.wilddogio.com"
+			};
+			
+			//取出点击任务
+
+			var maps = {};
+
+			mui("#add")[0].addEventListener("tap", function() {
+				var div = document.createElement("div");
+				div.className = "myRow";
+				div.innerHTML = '<input type="text" class="mui-input-clear" placeholder="菜名" style="float: left;width: 48%;height: 34px;">' +
+					'<input type="number" class="mui-input-clear" placeholder="￥价格" style="float: right;width: 48%;height: 34px;padding: 5px 15px;">';
+				mui("#myRows")[0].appendChild(div);
+			});
+
+			mui("#submit")[0].addEventListener("tap", function() {
+				var objlist = mui(".myRow");
+				for(var i = 0; i < objlist.length; i++) {
+					console.log("" + objlist[i].children[0].value + "," + objlist[i].children[1].value);
+					maps[objlist[i].children[0].value] = objlist[i].children[1].value;
+				}
+				wilddog.initializeApp(config);
+				var ref = wilddog.sync().ref("/15775691975/" + person + "/" + getNowFormatDate());
+				ref.set(maps, function(error) {
+					if(error == null) {
+						// 数据同步到野狗云端成功完成
+						mui.alert("提交成功");
+						mui.back();
+					} else {
+						alert("请把空格填完");
+					}
+				});
+			});
+
+			function getNowFormatDate() {
+				var date = new Date();
+				var seperator1 = "-";
+				var seperator2 = ":";
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if(month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if(strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate +
+					" " + date.getHours() + seperator2 + date.getMinutes() +
+					seperator2 + date.getSeconds();
+				return currentdate;
+			}
+		</script>
+	</body>
+
+</html>

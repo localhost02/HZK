@@ -1,9 +1,23 @@
 {
-  "index.html": {
-    "resources": [
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css"
-    ]
-  }
+	"index.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"write.html"
+		]
+	},
+	"write.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"index.html"
+		],
+		"refer": [
+			"index.html"
+		]
+	}
 }

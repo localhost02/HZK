@@ -196,6 +196,18 @@
 					"fonts/mui.ttf",
 					"css/mui.min.css"
 				],
+				"refer": [
+					"write.html"
+				],
+				"priority": 0
+			},
+			"write.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"index.html"
+				],
 				"refer": [],
 				"priority": 0
 			}

@@ -194,7 +194,8 @@
 				"resources": [
 					"js/mui.min.js",
 					"fonts/mui.ttf",
-					"css/mui.min.css"
+					"css/mui.min.css",
+					"js/util.js"
 				],
 				"refer": [
 					"write.html"
@@ -206,9 +207,13 @@
 					"js/mui.min.js",
 					"fonts/mui.ttf",
 					"css/mui.min.css",
-					"index.html"
+					"index.html",
+					"js/util.js",
+					"js/wilddog-init.js"
 				],
-				"refer": [],
+				"refer": [
+					"reg.html"
+				],
 				"priority": 0
 			}
 		},
@@ -218,5 +223,8 @@
 				"css/mui.css"
 			]
 		}
-	}
+	},
+	"unpackage":[
+	  "css/mui.css"
+	]
 }

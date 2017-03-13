@@ -12,54 +12,11 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-icon mui-icon-bars mui-pull-right" style="color: #FF5053;"></a>
+			<a class="mui-icon mui-icon-refresh mui-pull-left" style="color: #FF5053;"></a>
 			<h1 class="mui-title" style="color:#FF5053;">合租客</h1>
 		</header>
 		<div class="mui-content">
-			<div>
-				<div style="background-color:gainsboro;padding: 10px;">2017-3</div>
-				<ul class="mui-table-view mui-scroll">
-					<li class="mui-table-view-cell">
-						杨成
-						<ul class="mui-table-view" style="border-bottom: red solid 0;">
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">番茄：￥12</li>
-									<li class="mui-table-view-cell">西红柿：￥12</li>
-								</ul>
-							</li>
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">土豆：￥12</li>
-									<li class="mui-table-view-cell">土豆：￥12</li>
-								</ul>
-							</li>
-						</ul>
-					</li class="mui-table-view-cell">
-					<li class="mui-table-view-cell">
-						冉椿林
-						<ul class="mui-table-view" style="border-bottom: red solid 0;">
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">番茄：￥12</li>
-									<li class="mui-table-view-cell">西红柿：￥12</li>
-								</ul>
-							</li>
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">土豆：￥12</li>
-									<li class="mui-table-view-cell">土豆：￥12</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-
-			<div>
+			<div id="myContent">
 				<div style="background-color:gainsboro;padding: 10px;">2017-3</div>
 				<ul class="mui-table-view mui-scroll">
 					<li class="mui-table-view-cell">
@@ -126,11 +83,24 @@
 
 		<!--即使是底部工具条和底部选项卡，也要放在.mui-content之前，否则固定栏会遮住部分主内容-->
 		<script src="js/mui.min.js"></script>
+		<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://cdn.wilddog.com/sdk/js/2.5.2/wilddog.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
 			mui.plusReady(function() {
 				//只在手机运行的代码
 			});
+			/**
+			 * 野狗连接//////////////////////
+			 */
+			// 初始化
+			var wilddog_config = {
+				authDomain: "hzk.wilddog.com",
+				syncURL: "https://hzk.wilddogio.com"
+			};
+			//初始化野狗
+			wilddog.initializeApp(wilddog_config);
+
 			//定义一个全局变量存谁记账
 			var person = "杨成";
 			var mask = mui.createMask(function() { //callback为用户点击蒙版时自动执行的回调；
@@ -157,7 +127,16 @@
 				mask.close(); //显示遮罩
 				mui("#nameAlert")[0].setAttribute("style", "display: none;");
 				console.log("谁记账：" + person);
+				//计时器，实现页面跳转刷新
+				localStorage.setItem("interval", "20");
+				var iCount = setInterval(function() {
+					if(localStorage.getItem("interval") == 40) {
+						clearInterval(iCount);
+						document.location.reload(); //当前页面 
 
+					}
+
+				}, 500);
 				//跳转页面和传参数
 				mui.openWindow({
 					url: "write.html",
@@ -170,6 +149,83 @@
 						name: person //扩展参数
 					}
 				});
+			});
+			//野狗参数
+			var mydate = getNowFormatDate().substr(0, 7);
+			wilddogQuery(mydate);
+			//野狗查询
+			function wilddogQuery(mydate) {
+				var query = wilddog.sync().ref("/" + mydate + "/15775691975/");
+				query.once('value').then(function(snapshot) {
+					if(snapshot.exists()) {
+						showData(snapshot);
+						console.log(snapshot.numChildren());
+					} else
+						mui.alert("没有更多数据");
+				});
+			}
+
+			//展示查询数据
+			function showData(childData) {
+				var ul = document.createElement("ul");
+				ul.className = "mui-table-view mui-scroll";
+
+				childData.forEach(function(childSnapshot) {
+					// key will be "冉椿林" the first time and "杨成" the second time
+					var keyname = childSnapshot.key();
+					console.log("keyname==" + keyname);
+					// childData will be the actual contents of the child
+					var childData = childSnapshot;
+					console.log("数据==" + JSON.stringify(childData.val()));
+
+					var li = document.createElement("li");
+					li.className = "mui-table-view-cell";
+					li.innerHTML = keyname;
+					var ul2 = document.createElement("ul");
+					ul2.className = "mui-table-view mui-scroll";
+					childData.forEach(function(childSnapshot) {
+						// key will be "冉椿林" the first time and "杨成" the second time
+						var keyname = childSnapshot.key();
+						console.log("keyname==" + keyname);
+						// childData will be the actual contents of the child
+						var childData = childSnapshot;
+						console.log("数据==" + JSON.stringify(childData.val()));
+
+						var li = document.createElement("li");
+						li.className = "mui-table-view-cell";
+						li.innerHTML = keyname;
+						ul2.appendChild(li);
+
+						var ul3 = document.createElement("ul");
+						ul3.className = "mui-table-view mui-scroll";
+						childData.forEach(function(childSnapshot) {
+							// key will be "冉椿林" the first time and "杨成" the second time
+							var keyname = childSnapshot.key();
+							console.log("keyname==" + keyname);
+							// childData will be the actual contents of the child
+							var childData = childSnapshot;
+							console.log("数据==" + JSON.stringify(childData.val()));
+
+							var li = document.createElement("li");
+							li.className = "mui-table-view-cell";
+							li.innerHTML = keyname;
+							li.innerHTML += ":￥ " + childData.val();
+							ul3.appendChild(li);
+
+						});
+						li.appendChild(ul3);
+					});
+					li.appendChild(ul2);
+					ul.appendChild(li);
+
+				});
+				mui("#myContent")[0].innerHTML = "";
+				mui("#myContent")[0].appendChild(ul);
+			}
+
+			//刷新页面
+			mui(".mui-icon-refresh")[0].addEventListener("tap", function() {
+				document.location.reload(); //当前页面 
 			});
 		</script>
 	</body>

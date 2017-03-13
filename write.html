@@ -27,6 +27,7 @@
 			</a>
 		</nav>
 		<script src="js/mui.min.js"></script>
+		<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
 		<script src="https://cdn.wilddog.com/sdk/js/2.5.2/wilddog.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -34,18 +35,20 @@
 			mui.plusReady(function() {
 				//只在手机运行的代码
 				person = plus.webview.currentWebview().name;
+				alert(person);
 			});
 			/**
 			 * 野狗连接//////////////////////
 			 */
 			// 初始化
-			var config = {
+			var wilddog_config = {
 				authDomain: "hzk.wilddog.com",
 				syncURL: "https://hzk.wilddogio.com"
 			};
-			
-			//取出点击任务
+			//初始化野狗
+			wilddog.initializeApp(wilddog_config);
 
+			//取出点击任务
 			var maps = {};
 
 			mui("#add")[0].addEventListener("tap", function() {
@@ -57,41 +60,29 @@
 			});
 
 			mui("#submit")[0].addEventListener("tap", function() {
+				var wt = null; //实例化等待窗
+				wt = plus.nativeUI.showWaiting(); //打开等待
 				var objlist = mui(".myRow");
 				for(var i = 0; i < objlist.length; i++) {
 					console.log("" + objlist[i].children[0].value + "," + objlist[i].children[1].value);
 					maps[objlist[i].children[0].value] = objlist[i].children[1].value;
 				}
-				wilddog.initializeApp(config);
-				var ref = wilddog.sync().ref("/15775691975/" + person + "/" + getNowFormatDate());
+
+				var ref = wilddog.sync().ref("/" + getNowFormatDate().substr(0, 7) + "/15775691975/" + person + "/" + getNowFormatDate());
 				ref.set(maps, function(error) {
+					//关闭加载动画
+					wt.close();
 					if(error == null) {
 						// 数据同步到野狗云端成功完成
 						mui.alert("提交成功");
+						localStorage.setItem("interval", "40");
+						//跳转页面和传参数
 						mui.back();
 					} else {
 						alert("请把空格填完");
 					}
 				});
 			});
-
-			function getNowFormatDate() {
-				var date = new Date();
-				var seperator1 = "-";
-				var seperator2 = ":";
-				var month = date.getMonth() + 1;
-				var strDate = date.getDate();
-				if(month >= 1 && month <= 9) {
-					month = "0" + month;
-				}
-				if(strDate >= 0 && strDate <= 9) {
-					strDate = "0" + strDate;
-				}
-				var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate +
-					" " + date.getHours() + seperator2 + date.getMinutes() +
-					seperator2 + date.getSeconds();
-				return currentdate;
-			}
 		</script>
 	</body>
 

@@ -35,7 +35,12 @@
 			mui.plusReady(function() {
 				//只在手机运行的代码
 				person = plus.webview.currentWebview().name;
-				alert(person);
+				//				alert(person);
+				//重新back方法
+				plus.key.addEventListener("backbutton", function() {
+					//关闭首页时钟线程
+					localStorage.setItem("interval", "40");
+				});
 			});
 			/**
 			 * 野狗连接//////////////////////
@@ -51,6 +56,7 @@
 			//取出点击任务
 			var maps = {};
 
+			//添加一条
 			mui("#add")[0].addEventListener("tap", function() {
 				var div = document.createElement("div");
 				div.className = "myRow";
@@ -58,30 +64,42 @@
 					'<input type="number" class="mui-input-clear" placeholder="￥价格" style="float: right;width: 48%;height: 34px;padding: 5px 15px;">';
 				mui("#myRows")[0].appendChild(div);
 			});
-
+			//提交菜单
 			mui("#submit")[0].addEventListener("tap", function() {
-				var wt = null; //实例化等待窗
-				wt = plus.nativeUI.showWaiting(); //打开等待
-				var objlist = mui(".myRow");
-				for(var i = 0; i < objlist.length; i++) {
-					console.log("" + objlist[i].children[0].value + "," + objlist[i].children[1].value);
-					maps[objlist[i].children[0].value] = objlist[i].children[1].value;
+				var flag = 0;
+				for(var i = 0; i < mui("input").length; i++) {
+					if(mui("input")[i].value.trim() != "") {
+						flag++;
+					}
 				}
 
-				var ref = wilddog.sync().ref("/" + getNowFormatDate().substr(0, 7) + "/15775691975/" + person + "/" + getNowFormatDate());
-				ref.set(maps, function(error) {
-					//关闭加载动画
-					wt.close();
-					if(error == null) {
-						// 数据同步到野狗云端成功完成
-						mui.alert("提交成功");
-						localStorage.setItem("interval", "40");
-						//跳转页面和传参数
-						mui.back();
-					} else {
-						alert("请把空格填完");
+				if(flag == mui("input").length) {
+					var wt = null; //实例化等待窗
+					wt = plus.nativeUI.showWaiting(); //打开等待
+					var objlist = mui(".myRow");
+					for(var i = 0; i < objlist.length; i++) {
+						console.log("" + objlist[i].children[0].value + "," + objlist[i].children[1].value);
+						maps[objlist[i].children[0].value] = objlist[i].children[1].value;
 					}
-				});
+
+					var ref = wilddog.sync().ref("/" + getNowFormatDate().substr(0, 7) + "/15775691975/" + person + "/" + getNowFormatDate());
+					ref.set(maps, function(error) {
+						//关闭加载动画
+						wt.close();
+						if(error == null) {
+							// 数据同步到野狗云端成功完成
+							mui.alert("提交成功");
+							localStorage.setItem("interval", "40");
+							//跳转页面和传参数
+							mui.back();
+						} else {
+							mui.alert("网络异常");
+						}
+					});
+
+				} else {
+					mui.alert("不能提交空值");
+				}
 			});
 		</script>
 	</body>

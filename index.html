@@ -159,7 +159,7 @@
 				query.once('value').then(function(snapshot) {
 					if(snapshot.exists()) {
 						showData(snapshot);
-						console.log(snapshot.numChildren());
+//						console.log(snapshot.numChildren());
 					} else
 						mui.alert("没有更多数据");
 				});
@@ -173,10 +173,10 @@
 				childData.forEach(function(childSnapshot) {
 					// key will be "冉椿林" the first time and "杨成" the second time
 					var keyname = childSnapshot.key();
-					console.log("keyname==" + keyname);
+//					console.log("keyname==" + keyname);
 					// childData will be the actual contents of the child
 					var childData = childSnapshot;
-					console.log("数据==" + JSON.stringify(childData.val()));
+//					console.log("数据==" + JSON.stringify(childData.val()));
 
 					var li = document.createElement("li");
 					li.className = "mui-table-view-cell";
@@ -186,10 +186,10 @@
 					childData.forEach(function(childSnapshot) {
 						// key will be "冉椿林" the first time and "杨成" the second time
 						var keyname = childSnapshot.key();
-						console.log("keyname==" + keyname);
+//						console.log("keyname==" + keyname);
 						// childData will be the actual contents of the child
 						var childData = childSnapshot;
-						console.log("数据==" + JSON.stringify(childData.val()));
+//						console.log("数据==" + JSON.stringify(childData.val()));
 
 						var li = document.createElement("li");
 						li.className = "mui-table-view-cell";
@@ -201,10 +201,10 @@
 						childData.forEach(function(childSnapshot) {
 							// key will be "冉椿林" the first time and "杨成" the second time
 							var keyname = childSnapshot.key();
-							console.log("keyname==" + keyname);
+//							console.log("keyname==" + keyname);
 							// childData will be the actual contents of the child
 							var childData = childSnapshot;
-							console.log("数据==" + JSON.stringify(childData.val()));
+//							console.log("数据==" + JSON.stringify(childData.val()));
 
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
@@ -220,6 +220,10 @@
 
 				});
 				mui("#myContent")[0].innerHTML = "";
+				var div=document.createElement("div");
+				div.innerHTML=""+mydate;
+				div.setAttribute("style","margin: 8px 5px;");
+				mui("#myContent")[0].appendChild(div);
 				mui("#myContent")[0].appendChild(ul);
 			}
 

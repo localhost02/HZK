@@ -17,7 +17,7 @@
 		</header>
 		<div class="mui-content">
 			<div id="myContent">
-				<div style="background-color:gainsboro;padding: 10px;">2017-3</div>
+				<div id="nowMother" style="background-color:gainsboro;padding: 10px;">2017-3</div>
 				<ul class="mui-table-view mui-scroll">
 					<li class="mui-table-view-cell">
 						杨成
@@ -65,9 +65,12 @@
 			<div class="mui-popup-inner">
 				<div class="mui-popup-title">今天谁记账</div>
 				<br />
-				<button onclick="who(this,'y')" class="mui-btn-primary namebtn">杨成</button>
-				<button onclick="who(this,'r')" class="mui-btn-negative namebtn">冉椿林</button>
-				<button onclick="who(this,'g')" class="mui-btn-negative namebtn">郭富全</button>
+				<div style="margin-bottom: 2px;">
+					<button onclick="who(this,'y')" class="mui-btn-primary namebtn">杨成</button>
+					<button onclick="who(this,'r')" class="mui-btn-negative namebtn">冉椿林</button>
+					<button onclick="who(this,'g')" class="mui-btn-negative namebtn">郭富全</button>
+				</div>
+				<button onclick="who(this,'h')" class="mui-btn-negative namebtn" style="margin-left: -145px;">韩兰</button>
 			</div>
 			<div id="okbtn" class="mui-popup-button">
 				确认
@@ -159,7 +162,7 @@
 				query.once('value').then(function(snapshot) {
 					if(snapshot.exists()) {
 						showData(snapshot);
-//						console.log(snapshot.numChildren());
+						//						console.log(snapshot.numChildren());
 					} else
 						mui.alert("没有更多数据");
 				});
@@ -173,10 +176,10 @@
 				childData.forEach(function(childSnapshot) {
 					// key will be "冉椿林" the first time and "杨成" the second time
 					var keyname = childSnapshot.key();
-//					console.log("keyname==" + keyname);
+					//					console.log("keyname==" + keyname);
 					// childData will be the actual contents of the child
 					var childData = childSnapshot;
-//					console.log("数据==" + JSON.stringify(childData.val()));
+					//					console.log("数据==" + JSON.stringify(childData.val()));
 
 					var li = document.createElement("li");
 					li.className = "mui-table-view-cell";
@@ -186,10 +189,10 @@
 					childData.forEach(function(childSnapshot) {
 						// key will be "冉椿林" the first time and "杨成" the second time
 						var keyname = childSnapshot.key();
-//						console.log("keyname==" + keyname);
+						//						console.log("keyname==" + keyname);
 						// childData will be the actual contents of the child
 						var childData = childSnapshot;
-//						console.log("数据==" + JSON.stringify(childData.val()));
+						//						console.log("数据==" + JSON.stringify(childData.val()));
 
 						var li = document.createElement("li");
 						li.className = "mui-table-view-cell";
@@ -201,10 +204,10 @@
 						childData.forEach(function(childSnapshot) {
 							// key will be "冉椿林" the first time and "杨成" the second time
 							var keyname = childSnapshot.key();
-//							console.log("keyname==" + keyname);
+							//							console.log("keyname==" + keyname);
 							// childData will be the actual contents of the child
 							var childData = childSnapshot;
-//							console.log("数据==" + JSON.stringify(childData.val()));
+							//							console.log("数据==" + JSON.stringify(childData.val()));
 
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
@@ -220,9 +223,9 @@
 
 				});
 				mui("#myContent")[0].innerHTML = "";
-				var div=document.createElement("div");
-				div.innerHTML=""+mydate;
-				div.setAttribute("style","margin: 8px 5px;");
+				var div = document.createElement("div");
+				div.innerHTML = "" + mydate;
+				div.setAttribute("style", "margin: 8px 5px;");
 				mui("#myContent")[0].appendChild(div);
 				mui("#myContent")[0].appendChild(ul);
 			}

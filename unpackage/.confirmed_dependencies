@@ -1,27 +1,27 @@
 {
-	"index.html": {
-		"resources": [
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"js/util.js"
-		],
-		"refer": [
-			"write.html"
-		]
-	},
-	"write.html": {
-		"resources": [
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"index.html",
-			"js/util.js",
-			"js/wilddog-init.js"
-		],
-		"refer": [
-			"index.html",
-			"reg.html"
-		]
-	}
+  "index.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/util.js"
+    ],
+    "refer": [
+      "write.html"
+    ]
+  },
+  "write.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "index.html",
+      "js/util.js",
+      "js/wilddog-init.js"
+    ],
+    "refer": [
+      "index.html",
+      "reg.html"
+    ]
+  }
 }

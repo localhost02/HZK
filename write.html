@@ -17,8 +17,10 @@
 					<input type="number" class="mui-input-clear" placeholder="￥价格" style="float: right;width: 48%;height: 34px;padding: 5px 15px;">
 				</div>
 			</div>
-
-			<button id="add" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 5px;">+</button>
+			<div>
+				<button id="del" class="mui-btn  mui-btn-primary" style="padding: 5px;float: left;width: 48%;">-</button>
+				<button id="add" class="mui-btn  mui-btn-primary" style="padding: 5px;float: right;width: 48%;">+</button>
+			</div>
 		</div>
 		<!--底部选项卡-->
 		<nav id="submit" class="mui-bar mui-bar-tab" style="border-radius: 50px;width: 60px;height: 60px;float: left;margin: auto;bottom: 10px;border: groove;background-color: transparent">
@@ -56,6 +58,12 @@
 			//取出点击任务
 			var maps = {};
 
+			//删除一条
+			mui("#del")[0].addEventListener("tap", function() {
+				console.log(mui("#myRows")[0].children.length);
+				var length=mui("#myRows")[0].children.length-1;
+				mui("#myRows")[0].removeChild(mui("#myRows")[0].children[length]);
+			});
 			//添加一条
 			mui("#add")[0].addEventListener("tap", function() {
 				var div = document.createElement("div");

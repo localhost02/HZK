@@ -198,7 +198,8 @@
 					"js/util.js"
 				],
 				"refer": [
-					"write.html"
+					"write.html",
+					"menu/settlement.html"
 				],
 				"priority": 0
 			},
@@ -214,6 +215,17 @@
 				"refer": [
 					"reg.html"
 				],
+				"priority": 0
+			},
+			"menu/settlement.html": {
+				"resources": [
+					"js/underscore.js",
+					"js/jquery.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
 				"priority": 0
 			}
 		},

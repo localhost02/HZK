@@ -106,6 +106,8 @@
 
 			//定义一个全局变量存谁记账
 			var person = "杨成";
+			var personArrays = [];
+			//蒙版
 			var mask = mui.createMask(function() { //callback为用户点击蒙版时自动执行的回调；
 				mui("#nameAlert")[0].setAttribute("style", "display: none;");
 			});
@@ -175,44 +177,48 @@
 
 				childData.forEach(function(childSnapshot) {
 					// key will be "冉椿林" the first time and "杨成" the second time
-					var keyname = childSnapshot.key();
-					//					console.log("keyname==" + keyname);
+					var keyname1 = childSnapshot.key();
+					personArrays.push(keyname1);
+					//										console.log("keyname1==" + keyname1);
 					// childData will be the actual contents of the child
 					var childData = childSnapshot;
 					//					console.log("数据==" + JSON.stringify(childData.val()));
 
 					var li = document.createElement("li");
 					li.className = "mui-table-view-cell";
-					li.innerHTML = keyname;
+					li.innerHTML = keyname1;
 					var ul2 = document.createElement("ul");
 					ul2.className = "mui-table-view mui-scroll";
 					childData.forEach(function(childSnapshot) {
-						// key will be "冉椿林" the first time and "杨成" the second time
-						var keyname = childSnapshot.key();
-						//						console.log("keyname==" + keyname);
+						// key will be "2017-04-04 20:52:7" the first time and "2017-04-05 20:52:7" the second time
+						var keyname2 = childSnapshot.key();
+						//												console.log("keyname2==" + keyname2);
 						// childData will be the actual contents of the child
 						var childData = childSnapshot;
 						//						console.log("数据==" + JSON.stringify(childData.val()));
 
 						var li = document.createElement("li");
 						li.className = "mui-table-view-cell";
-						li.innerHTML = keyname;
+						li.innerHTML = keyname2;
 						ul2.appendChild(li);
 
 						var ul3 = document.createElement("ul");
 						ul3.className = "mui-table-view mui-scroll";
 						childData.forEach(function(childSnapshot) {
-							// key will be "冉椿林" the first time and "杨成" the second time
-							var keyname = childSnapshot.key();
-							//							console.log("keyname==" + keyname);
+							// key will be "土豆" the first time and "茄子" the second time
+							var keyname3 = childSnapshot.key();
+							//							console.log("keyname3==" + keyname3);
 							// childData will be the actual contents of the child
 							var childData = childSnapshot;
 							//							console.log("数据==" + JSON.stringify(childData.val()));
 
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
-							li.innerHTML = keyname;
-							li.innerHTML += ":￥ " + childData.val();
+							li.innerHTML = keyname3;
+							if(keyname1 != "韩兰") {
+								li.setAttribute("belong", keyname1);
+							}
+							li.innerHTML += ":￥ <span>" + childData.val() + "</span>";
 							ul3.appendChild(li);
 
 						});
@@ -234,6 +240,41 @@
 			mui(".mui-icon-refresh")[0].addEventListener("tap", function() {
 				document.location.reload(); //当前页面 
 			});
+			//右上角统计按钮
+			mui(".mui-icon-bars")[0].addEventListener("tap", function() {
+				var moneyList = [];
+				for(var i = 0; i < personArrays.length; i++) {
+					moneyList.push("{'name':'"+personArrays[i]+"','money':'"+spend(mui("li[belong=" + personArrays[i]))+"'}");
+				}
+				var allMoney = spend(mui("li[belong]"));
+				moneyList.push("{'name':'总支出','money':'"+allMoney+"'}");
+				var average=allMoney/personArrays.length;
+				//跳转到统计页面
+				mui.openWindow({
+					url: "menu/settlement.html",
+					id: "settlement.html",
+					show: {
+						aniShow: 'pop-in',
+						duration: 300
+					},
+					extras: {
+						moneyList: moneyList, //每个人的钱数
+						average:average  //平均钱数
+					}
+
+				});
+			});
+			//统计花销
+			function spend(objects) {
+				var objects_length = objects.length;
+				var money = 0;
+				for(var i = 0; i < objects_length; i++) {
+					var singlemoney = objects[i].children[0].innerText;
+					singlemoney = parseFloat(singlemoney);
+					money += singlemoney;
+				}
+				return money;
+			}
 		</script>
 	</body>
 

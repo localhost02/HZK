@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <!--结算页面-->
 <html>
 
@@ -15,12 +15,9 @@
 			<h1 class="mui-title" style="color:#FF5053;">结算</h1>
 		</header>
 		<div class="mui-content">
-			<!--合计支出-->
-			<div style="margin: 10px;">
-				<button type="button" class="mui-btn-block mui-btn-danger" style="padding: 5px;">
-					合计：￥<span id="allSpend">-100</span>
-				</button>
-			</div>
+			<!-- 用于显示渲染后的标签 -->
+			<ul id="element"></ul>
+
 			<!--没人支出和收回-->
 			<div id="personList">
 				<div class="mui-card">
@@ -38,70 +35,83 @@
 						<br />
 					</div>
 				</div>
-				<div class="mui-card">
-					<div class="mui-card-header">
-						冉椿林
-					</div>
-					<div style="padding: 15px 15px;">
-						<div id="" style="float: left;">
-							支出：<br/> ￥154444
-						</div>
-						<div id="" style="float: right;">
-							应收：<br/> ￥-154444
-						</div>
-						<br />
-						<br />
-					</div>
-				</div>
+
 			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
-		<script src="https://cdn.wilddog.com/sdk/js/2.5.2/wilddog.js"></script>
-		<script src="../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/underscore.js" type="text/javascript" charset="utf-8"></script>
+		<!-- 定义模板，将模板内容放到一个script标签中 -->
+		<!--
+			_.template模板函数只能解析3种模板标签（这比Smarty、JSTL要简单得多）：
+			<%  %>：用于包含JavaScript代码，这些代码将在渲染数据时被执行。
+			<%= %>：用于输出数据，可以是一个变量、某个对象的属性、或函数调用（将输出函数的返回值）。
+			<%- %>：用于输出数据，同时会将数据中包含的HTML字符转换为实体形式（例如它会将双引号转换为&quot;形式），用于避免XSS攻击。
+		-->
+		<script type="text/template" id="tpl">
+			<% for(var i = 0; i < data.list.length; i++) { %>
+			<% var item = data.list[i];%>
+			<% item=eval('(' + item + ')'); %>
+			<% if(item.name!="总支出"){ %>
+			<div class="mui-card">
+				<div class="mui-card-header">
+					<%=item.name%>
+				</div>
+				<div style="padding: 15px 15px;">
+					<div id="" style="float: left;">
+						支出：<br/> ￥
+						<%=item.money%>
+					</div>
+					<div id="" style="float: right;">
+						应收：<br/> ￥
+						<%=(item.money-average).toFixed(2) %>
+					</div>
+					<br />
+					<br />
+				</div>
+			</div>
+			<%}else{%>
+			<!--合计支出-->
+			<div style="margin: 10px;">
+				<button type="button" class="mui-btn-block mui-btn-danger" style="padding: 5px;">
+					<%=item.name%>：￥<span id="allSpend"><%=item.money%></span>
+				</button>
+			</div>
+			<%}%>
+
+			<% } %>
+		</script>
 		<script type="text/javascript">
 			mui.init();
 			mui.plusReady(function() {
 				//只在手机运行的代码
+				//金钱统计
+				var moneyList = [];
+				//取出上个页面的传值
+				moneyList = plus.webview.currentWebview().moneyList;
+				window.average=plus.webview.currentWebview().average;
+				console.log("average=="+average);
+				moneyList.forEach(function(item, key, mapObj) {
+					console.log(key + ":" + eval('(' + item + ')').name);
+				});
+
+				// 获取渲染元素和模板内容  
+				var element = $('#personList');
+				var tpl = $('#tpl').html();
+
+				// 创建数据模型
+				window.data = {
+					list: moneyList
+				}
+				// 解析模板, 返回解析后的内容  
+				var html = _.template(tpl, data);
+				// 将解析后的内容填充到渲染元素  
+				element.html(html);
 			});
-			/**
-			 * 野狗连接//////////////////////
-			 */
-			// 初始化
-			var wilddog_config = {
-				authDomain: "hzk.wilddog.com",
-				syncURL: "https://hzk.wilddogio.com"
-			};
-			//初始化野狗
-			wilddog.initializeApp(wilddog_config);
-			//野狗参数
-			var mydate = getNowFormatDate().substr(0, 7);
-			wilddogQuery(mydate);
-			//野狗查询
-			function wilddogQuery(mydate) {
-				var query = wilddog.sync().ref("/" + mydate + "/15775691975/");
-				query.once('value').then(function(snapshot) {
-					if(snapshot.exists()) {
-						showData(snapshot);
-					} else
-						mui.alert("没有更多数据");
-				});
-			}
-
-			//展示查询数据
-			function showData(childData) {
-				var ul = document.createElement("ul");
-				ul.className = "mui-table-view mui-scroll";
-
-				childData.forEach(function(childSnapshot) {
-					// key will be "冉椿林" the first time and "杨成" the second time
-					var keyname = childSnapshot.key();
-					console.log("keyname==" + keyname);
-					// childData will be the actual contents of the child
-					var childData = childSnapshot;
-					console.log("数据==" + JSON.stringify(childData.val()));
-				});
-			}
-			
+			//返回上页按钮
+			mui(".mui-icon-back")[0].addEventListener("tap", function() {
+				mui.back();
+			});
 		</script>
 	</body>
 

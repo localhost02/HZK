@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+	</head>
+
+	<body>
+		<!-- 用于显示渲染后的标签 -->
+		<ul id="element"></ul>
+
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script type="text/javascript" src="js/underscore.js"></script>
+		<!-- 定义模板，将模板内容放到一个script标签中 -->
+		<!--
+			_.template模板函数只能解析3种模板标签（这比Smarty、JSTL要简单得多）：
+			<%  %>：用于包含JavaScript代码，这些代码将在渲染数据时被执行。
+			<%= %>：用于输出数据，可以是一个变量、某个对象的属性、或函数调用（将输出函数的返回值）。
+			<%- %>：用于输出数据，同时会将数据中包含的HTML字符转换为实体形式（例如它会将双引号转换为&quot;形式），用于避免XSS攻击。
+		-->
+		<script type="text/template" id="tpl">
+			<% for(var i = 0; i < data.list.length; i++) { %>
+			<% var item = data.list[i] %>
+			<li>
+				<span><%=item.firstName%> <%=item.lastName%></span>
+				<span><%-item.city%></span>
+			</li>
+			<% } %>
+		</script>
+		<script type="text/javascript">
+			// 获取渲染元素和模板内容  
+			var element = $('#element'),
+				tpl = $('#tpl').html();
+
+			// 创建数据, 这些数据可能是你从服务器获取的  
+			var data = {
+				list: [{
+						firstName: '<a href="#">Zhang</a>',
+						lastName: 'San',
+						city: 'Shanghai'
+					},
+					{
+						firstName: 'Li',
+						lastName: 'Si',
+						city: '<a href="#">Beijing</a>'
+					},
+					{
+						firstName: 'Wang',
+						lastName: 'Wu',
+						city: 'Guangzhou'
+					},
+					{
+						firstName: 'Zhao',
+						lastName: 'Liu',
+						city: 'Shenzhen'
+					}
+				]
+			}
+
+			// 解析模板, 返回解析后的内容  
+			var html = _.template(tpl, data);
+			// 将解析后的内容填充到渲染元素  
+			element.html(html);
+		</script>
+	</body>
+
+</html>

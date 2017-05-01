@@ -16,6 +16,9 @@
 			<h1 class="mui-title" style="color:#FF5053;">合租客</h1>
 		</header>
 		<div class="mui-content">
+			<div class="mui-btn-block mui-btn-danger" onclick="preMonth()" style="text-align: center;">
+				上月
+			</div>
 			<div id="myContent">
 				<div id="nowMother" style="background-color:gainsboro;padding: 10px;">2017-3</div>
 				<ul class="mui-table-view mui-scroll">
@@ -156,14 +159,13 @@
 				});
 			});
 			//野狗参数
-			var mydate = getNowFormatDate().substr(0, 7);
-			wilddogQuery(mydate);
+			wilddogQuery(getNowFormatDate().substr(0, 7));
 			//野狗查询
 			function wilddogQuery(mydate) {
 				var query = wilddog.sync().ref("/" + mydate + "/15775691975/");
 				query.once('value').then(function(snapshot) {
 					if(snapshot.exists()) {
-						showData(snapshot);
+						showData(snapshot,mydate);
 						//						console.log(snapshot.numChildren());
 					} else
 						mui.alert("没有更多数据");
@@ -171,7 +173,7 @@
 			}
 
 			//展示查询数据
-			function showData(childData) {
+			function showData(childData,mydate) {
 				var ul = document.createElement("ul");
 				ul.className = "mui-table-view mui-scroll";
 
@@ -274,6 +276,10 @@
 					money += singlemoney;
 				}
 				return money;
+			}
+			//上月记录
+			function preMonth(){
+				wilddogQuery(getPreMonth(getNowFormatDate()).substr(0, 7));
 			}
 		</script>
 	</body>

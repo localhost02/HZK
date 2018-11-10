@@ -22,20 +22,16 @@
 			<div id="personList">
 				<div class="mui-card">
 					<div class="mui-card-header">
-						杨成
 					</div>
 					<div style="padding: 15px 15px;">
 						<div id="" style="float: left;">
-							支出：<br/> ￥154444
 						</div>
 						<div id="" style="float: right;">
-							应收：<br/> ￥-154444
 						</div>
 						<br />
 						<br />
 					</div>
 				</div>
-
 			</div>
 		</div>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
@@ -49,8 +45,8 @@
 			<%- %>：用于输出数据，同时会将数据中包含的HTML字符转换为实体形式（例如它会将双引号转换为&quot;形式），用于避免XSS攻击。
 		-->
 		<script type="text/template" id="tpl">
-			<% for(var i = 0; i < data.list.length; i++) { %>
-			<% var item = data.list[i];%>
+			<%for(var i = 0; i < data.length; i++) { %>
+			<% var item = data[i];%>
 			<% item=eval('(' + item + ')'); %>
 			<% if(item.name!="总支出"){ %>
 			<div class="mui-card">
@@ -59,11 +55,12 @@
 				</div>
 				<div style="padding: 15px 15px;">
 					<div id="" style="float: left;">
-						支出：<br/> ￥
-						<%=item.money%>
+						总支出：<br/> ￥
+						<%=(item.money-0).toFixed(2)%>
 					</div>
 					<div id="" style="float: right;">
-						应收：<br/> ￥
+						应
+						<%=(item.money-average).toFixed(2)>0?'收':'付' %>：<br/> ￥
 						<%=(item.money-average).toFixed(2) %>
 					</div>
 					<br />
@@ -74,12 +71,10 @@
 			<!--合计支出-->
 			<div style="margin: 10px;">
 				<button type="button" class="mui-btn-block mui-btn-danger" style="padding: 5px;">
-					<%=item.name%>：￥<span id="allSpend"><%=item.money%></span>
+					<%=item.name%>：￥<span id="allSpend"><%=(item.money-0).toFixed(2) %></span>
 				</button>
 			</div>
-			<%}%>
-
-			<% } %>
+			<%}}%>
 		</script>
 		<script type="text/javascript">
 			mui.init();
@@ -89,20 +84,15 @@
 				var moneyList = [];
 				//取出上个页面的传值
 				moneyList = plus.webview.currentWebview().moneyList;
-				window.average=plus.webview.currentWebview().average;
-				console.log("average=="+average);
-				moneyList.forEach(function(item, key, mapObj) {
-					console.log(key + ":" + eval('(' + item + ')').name);
-				});
+				window.average = plus.webview.currentWebview().average;
 
 				// 获取渲染元素和模板内容  
 				var element = $('#personList');
 				var tpl = $('#tpl').html();
 
 				// 创建数据模型
-				window.data = {
-					list: moneyList
-				}
+				window.data = moneyList
+
 				// 解析模板, 返回解析后的内容  
 				var html = _.template(tpl, data);
 				// 将解析后的内容填充到渲染元素  

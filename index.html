@@ -20,47 +20,6 @@
 				上月
 			</div>
 			<div id="myContent">
-				<div id="nowMother" style="background-color:gainsboro;padding: 10px;">2017-3</div>
-				<ul class="mui-table-view mui-scroll">
-					<li class="mui-table-view-cell">
-						杨成
-						<ul class="mui-table-view" style="border-bottom: red solid 0;">
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">番茄：￥12</li>
-									<li class="mui-table-view-cell">西红柿：￥12</li>
-								</ul>
-							</li>
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">土豆：￥12</li>
-									<li class="mui-table-view-cell">土豆：￥12</li>
-								</ul>
-							</li>
-						</ul>
-					</li class="mui-table-view-cell">
-					<li class="mui-table-view-cell">
-						冉椿林
-						<ul class="mui-table-view" style="border-bottom: red solid 0;">
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">番茄：￥12</li>
-									<li class="mui-table-view-cell">西红柿：￥12</li>
-								</ul>
-							</li>
-							<li class="mui-table-view-cell">1970/1/1 8:24:48</li>
-							<li class="mui-table-view-cell">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell">土豆：￥12</li>
-									<li class="mui-table-view-cell">土豆：￥12</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
 			</div>
 
 		</div>
@@ -69,11 +28,11 @@
 				<div class="mui-popup-title">今天谁记账</div>
 				<br />
 				<div style="margin-bottom: 2px;">
-					<button onclick="who(this,'y')" class="mui-btn-primary namebtn">杨成</button>
-					<button onclick="who(this,'r')" class="mui-btn-negative namebtn">冉椿林</button>
-					<button onclick="who(this,'g')" class="mui-btn-negative namebtn">郭富全</button>
+					<button onclick="who(this,'y')" class="mui-btn-primary namebtn">冉椿林</button>
+					<button onclick="who(this,'r')" class="mui-btn-negative namebtn">谢海龙</button>
+					<button onclick="who(this,'g')" class="mui-btn-negative namebtn">刘欢</button>
 				</div>
-				<button onclick="who(this,'h')" class="mui-btn-negative namebtn" style="margin-left: -145px;">韩兰</button>
+				<button onclick="who(this,'h')" class="mui-btn-negative namebtn" style="margin-left: -145px;">肖艳</button>
 			</div>
 			<div id="okbtn" class="mui-popup-button">
 				确认
@@ -108,7 +67,7 @@
 			wilddog.initializeApp(wilddog_config);
 
 			//定义一个全局变量存谁记账
-			var person = "杨成";
+			var person = "冉椿林";
 			var personArrays = [];
 			//蒙版
 			var mask = mui.createMask(function() { //callback为用户点击蒙版时自动执行的回调；
@@ -121,7 +80,6 @@
 					mui(".namebtn")[i].setAttribute('class', 'mui-btn-negative namebtn');
 				}
 				obj.setAttribute('class', 'mui-btn-primary namebtn');
-				console.log(name + "," + obj.innerText);
 				person = obj.innerText;
 			}
 
@@ -134,14 +92,12 @@
 			mui("#okbtn")[0].addEventListener("tap", function() {
 				mask.close(); //显示遮罩
 				mui("#nameAlert")[0].setAttribute("style", "display: none;");
-				console.log("谁记账：" + person);
 				//计时器，实现页面跳转刷新
 				localStorage.setItem("interval", "20");
 				var iCount = setInterval(function() {
 					if(localStorage.getItem("interval") == 40) {
 						clearInterval(iCount);
 						document.location.reload(); //当前页面 
-
 					}
 
 				}, 500);
@@ -163,42 +119,36 @@
 			//野狗查询
 			function wilddogQuery(mydate) {
 				var query = wilddog.sync().ref("/" + mydate + "/15775691975/");
+				console.log(query.toString());
 				query.once('value').then(function(snapshot) {
+					console.log(snapshot);
 					if(snapshot.exists()) {
-						showData(snapshot,mydate);
-						//						console.log(snapshot.numChildren());
-					} else
-						mui.alert("没有更多数据");
+						showData(snapshot, mydate);
+						//console.log(snapshot.numChildren());
+					} else {
+						//mui.alert("没有更多数据");
+					}
 				});
 			}
 
 			//展示查询数据
-			function showData(childData,mydate) {
+			function showData(childData, mydate) {
 				var ul = document.createElement("ul");
 				ul.className = "mui-table-view mui-scroll";
 
+				personArrays = [];
 				childData.forEach(function(childSnapshot) {
-					// key will be "冉椿林" the first time and "杨成" the second time
 					var keyname1 = childSnapshot.key();
 					personArrays.push(keyname1);
-					//										console.log("keyname1==" + keyname1);
-					// childData will be the actual contents of the child
 					var childData = childSnapshot;
-					//					console.log("数据==" + JSON.stringify(childData.val()));
-
 					var li = document.createElement("li");
 					li.className = "mui-table-view-cell";
 					li.innerHTML = keyname1;
 					var ul2 = document.createElement("ul");
 					ul2.className = "mui-table-view mui-scroll";
 					childData.forEach(function(childSnapshot) {
-						// key will be "2017-04-04 20:52:7" the first time and "2017-04-05 20:52:7" the second time
 						var keyname2 = childSnapshot.key();
-						//												console.log("keyname2==" + keyname2);
-						// childData will be the actual contents of the child
 						var childData = childSnapshot;
-						//						console.log("数据==" + JSON.stringify(childData.val()));
-
 						var li = document.createElement("li");
 						li.className = "mui-table-view-cell";
 						li.innerHTML = keyname2;
@@ -207,17 +157,12 @@
 						var ul3 = document.createElement("ul");
 						ul3.className = "mui-table-view mui-scroll";
 						childData.forEach(function(childSnapshot) {
-							// key will be "土豆" the first time and "茄子" the second time
 							var keyname3 = childSnapshot.key();
-							//							console.log("keyname3==" + keyname3);
-							// childData will be the actual contents of the child
 							var childData = childSnapshot;
-							//							console.log("数据==" + JSON.stringify(childData.val()));
-
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
 							li.innerHTML = keyname3;
-							if(keyname1 != "韩兰") {
+							if(keyname1 != "肖艳") {
 								li.setAttribute("belong", keyname1);
 							}
 							li.innerHTML += ":￥ <span>" + childData.val() + "</span>";
@@ -246,11 +191,11 @@
 			mui(".mui-icon-bars")[0].addEventListener("tap", function() {
 				var moneyList = [];
 				for(var i = 0; i < personArrays.length; i++) {
-					moneyList.push("{'name':'"+personArrays[i]+"','money':'"+spend(mui("li[belong=" + personArrays[i]))+"'}");
+					moneyList.push("{'name':'" + personArrays[i] + "','money':'" + spend(mui("li[belong=" + personArrays[i])) + "'}");
 				}
 				var allMoney = spend(mui("li[belong]"));
-				moneyList.push("{'name':'总支出','money':'"+allMoney+"'}");
-				var average=allMoney/personArrays.length;
+				moneyList.push("{'name':'总支出','money':'" + allMoney + "'}");
+				var average = allMoney / personArrays.length;
 				//跳转到统计页面
 				mui.openWindow({
 					url: "menu/settlement.html",
@@ -261,7 +206,7 @@
 					},
 					extras: {
 						moneyList: moneyList, //每个人的钱数
-						average:average  //平均钱数
+						average: average //平均钱数
 					}
 
 				});
@@ -278,7 +223,7 @@
 				return money;
 			}
 			//上月记录
-			function preMonth(){
+			function preMonth() {
 				wilddogQuery(getPreMonth(getNowFormatDate()).substr(0, 7));
 			}
 		</script>
